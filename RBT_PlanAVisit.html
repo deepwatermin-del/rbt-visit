@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plan Your Visit — Rome Baptist Temple</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #f0ece4;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+  }
+
+  .page-wrap {
+    width: 100%;
+    max-width: 820px;
+  }
+
+  /* CARD */
+  .card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 40px rgba(0,0,0,0.10);
+    display: flex;
+  }
+
+  /* LEFT */
+  .card-left {
+    width: 260px;
+    flex-shrink: 0;
+    background: #1a2340;
+    padding: 36px 28px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+  .card-left::before {
+    content: '✝';
+    position: absolute;
+    bottom: -30px; right: -15px;
+    font-size: 180px;
+    color: rgba(255,255,255,0.03);
+    font-family: serif;
+    line-height: 1;
+  }
+  .church-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.92);
+    margin-bottom: 2px;
+  }
+  .church-sub {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 28px;
+  }
+  .left-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 24px;
+  }
+  .left-headline span { color: #f0c040; }
+  .detail-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .detail-icon {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    background: rgba(240,192,64,0.15);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 14px;
+  }
+  .detail-text strong {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 1px;
+  }
+  .detail-text span {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.4;
+  }
+  .left-promise {
+    margin-top: auto;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.6;
+  }
+  .left-promise strong { color: rgba(255,255,255,0.85); display: block; margin-bottom: 2px; }
+
+  /* RIGHT */
+  .card-right {
+    flex: 1;
+    padding: 36px 32px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #form-view, #confirm-view, #error-view { display: none; flex-direction: column; flex: 1; }
+  #form-view.active, #confirm-view.active, #error-view.active { display: flex; }
+
+  .form-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a2340;
+    margin-bottom: 4px;
+  }
+  .form-sub {
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 22px;
+    line-height: 1.5;
+  }
+
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .field-group { margin-bottom: 14px; }
+  .field-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 5px;
+  }
+  .req { color: #c0392b; }
+  .field-input {
+    width: 100%;
+    font-size: 14px;
+    padding: 10px 13px;
+    border-radius: 8px;
+    border: 1.5px solid #e5ddd0;
+    background: #fff;
+    color: #1a2340;
+    font-family: 'DM Sans', sans-serif;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    outline: none;
+  }
+  .field-input:focus {
+    border-color: #c0392b;
+    box-shadow: 0 0 0 3px rgba(192,57,43,0.1);
+  }
+  .field-input.error { border-color: #e74c3c; }
+
+  select.field-input { cursor: pointer; }
+
+  .sunday-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 5px;
+  }
+  .sunday-opt {
+    border: 1.5px solid #e5ddd0;
+    border-radius: 8px;
+    padding: 9px 6px;
+    text-align: center;
+    cursor: pointer;
+    background: #f8f4ee;
+    transition: all 0.12s;
+    user-select: none;
+  }
+  .sunday-opt:hover { border-color: #c0392b; background: #fff; }
+  .sunday-opt.selected {
+    border-color: #c0392b;
+    background: rgba(192,57,43,0.06);
+  }
+  .sunday-date { font-size: 13px; font-weight: 600; color: #1a2340; }
+  .sunday-label { font-size: 10px; color: #6b7280; margin-top: 1px; }
+
+  .opt-in-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 18px;
+  }
+  .opt-in-row input { margin-top: 3px; flex-shrink: 0; accent-color: #c0392b; }
+  .opt-in-text { font-size: 11px; color: #6b7280; line-height: 1.5; }
+
+  .submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: #c0392b;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: auto;
+    transition: background 0.15s, transform 0.1s;
+    letter-spacing: 0.2px;
+  }
+  .submit-btn:hover { background: #a93226; }
+  .submit-btn:active { transform: scale(0.99); }
+  .submit-btn:disabled { background: #d1d5db; cursor: not-allowed; }
+
+  .error-msg {
+    font-size: 11px;
+    color: #e74c3c;
+    margin-top: 4px;
+    display: none;
+  }
+  .error-msg.show { display: block; }
+
+  /* CONFIRMATION */
+  #confirm-view {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .confirm-icon {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: #d4edda;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 18px;
+    font-size: 32px;
+  }
+  .confirm-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a2340;
+    margin-bottom: 8px;
+  }
+  .confirm-sub {
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 22px;
+    line-height: 1.6;
+    max-width: 300px;
+  }
+  .seq-box {
+    background: #f8f4ee;
+    border: 1px solid #e5ddd0;
+    border-radius: 10px;
+    padding: 16px 18px;
+    width: 100%;
+    margin-bottom: 16px;
+    text-align: left;
+  }
+  .seq-box-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 12px;
+  }
+  .seq-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: flex-start;
+  }
+  .seq-item:last-child { margin-bottom: 0; }
+  .seq-dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+  .seq-text { font-size: 13px; color: #374151; line-height: 1.4; }
+  .seq-when { font-size: 11px; color: #9ca3af; }
+  .pastor-note {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+  .pastor-note strong { color: #1a2340; }
+  .btn-reset {
+    font-size: 12px;
+    color: #6b7280;
+    background: none;
+    border: 1px solid #e5ddd0;
+    border-radius: 8px;
+    padding: 8px 18px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .btn-reset:hover { background: #f8f4ee; }
+
+  /* ERROR */
+  #error-view {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .error-big-icon {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: #fff3cd;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 18px;
+    font-size: 30px;
+  }
+
+  /* MOBILE */
+  @media (max-width: 600px) {
+    body { padding: 16px 12px; align-items: flex-start; }
+    .card { flex-direction: column; }
+    .card-left { width: 100%; padding: 24px 22px; }
+    .card-left::before { display: none; }
+    .left-headline { font-size: 22px; margin-bottom: 16px; }
+    .detail-item { margin-bottom: 10px; }
+    .left-promise { display: none; }
+    .card-right { padding: 24px 20px; }
+    .field-row { grid-template-columns: 1fr; gap: 0; }
+    .sunday-grid { grid-template-columns: repeat(3,1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-wrap">
+  <div class="card">
+
+    <!-- LEFT -->
+    <div class="card-left">
+      <div class="church-name">Rome Baptist Temple</div>
+      <div class="church-sub">rbtemple.com · Rome, Georgia</div>
+      <div class="left-headline">We'd love to see you <span>this Sunday.</span></div>
+      <div class="detail-item">
+        <div class="detail-icon">🕙</div>
+        <div class="detail-text">
+          <strong>Sunday Service</strong>
+          <span>11:00 AM — all ages welcome</span>
+        </div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-icon">📍</div>
+        <div class="detail-text">
+          <strong>3003 New Calhoun Hwy NE</strong>
+          <span>Rome, GA 30161</span>
+        </div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-icon">📖</div>
+        <div class="detail-text">
+          <strong>King James Bible</strong>
+          <span>Traditional Baptist worship</span>
+        </div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-icon">👨‍👩‍👧</div>
+        <div class="detail-text">
+          <strong>Kids' Ministry Available</strong>
+          <span>Birth through teens</span>
+        </div>
+      </div>
+      <div class="left-promise">
+        <strong>No pressure. No obligation.</strong>
+        Just a warm welcome and a seat saved for you. Come as you are.
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="card-right">
+
+      <!-- FORM -->
+      <div id="form-view" class="active">
+        <div class="form-title">Plan Your Visit</div>
+        <div class="form-sub">Fill out the form below and Pastor Chris will personally follow up with everything you need before Sunday.</div>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label" for="fname">First Name <span class="req">*</span></label>
+            <input class="field-input" type="text" id="fname" placeholder="James" autocomplete="given-name" />
+            <div class="error-msg" id="err-fname">Please enter your first name.</div>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="lname">Last Name <span class="req">*</span></label>
+            <input class="field-input" type="text" id="lname" placeholder="Carter" autocomplete="family-name" />
+            <div class="error-msg" id="err-lname">Please enter your last name.</div>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="phone">Mobile Phone <span class="req">*</span></label>
+          <input class="field-input" type="tel" id="phone" placeholder="706-555-0100" autocomplete="tel" />
+          <div class="error-msg" id="err-phone">Please enter a valid 10-digit phone number.</div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="email">Email Address</label>
+          <input class="field-input" type="email" id="email" placeholder="james@email.com" autocomplete="email" />
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Which Sunday are you planning to visit? <span class="req">*</span></label>
+          <div class="sunday-grid">
+            <div class="sunday-opt" onclick="selectSunday(this,'June 1')"><div class="sunday-date">June 1</div><div class="sunday-label">Sunday</div></div>
+            <div class="sunday-opt" onclick="selectSunday(this,'June 8')"><div class="sunday-date">June 8</div><div class="sunday-label">Sunday</div></div>
+            <div class="sunday-opt" onclick="selectSunday(this,'June 15')"><div class="sunday-date">June 15</div><div class="sunday-label">Sunday</div></div>
+            <div class="sunday-opt selected" onclick="selectSunday(this,'June 22')"><div class="sunday-date">June 22</div><div class="sunday-label">Sunday</div></div>
+            <div class="sunday-opt" onclick="selectSunday(this,'June 29')"><div class="sunday-date">June 29</div><div class="sunday-label">Sunday</div></div>
+            <div class="sunday-opt" onclick="selectSunday(this,'Aug 9 — Homecoming')"><div class="sunday-date">Aug 9</div><div class="sunday-label">Homecoming!</div></div>
+          </div>
+          <div class="error-msg" id="err-sunday">Please select a Sunday.</div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="source">How did you hear about us?</label>
+          <select class="field-input" id="source">
+            <option value="">— Select one —</option>
+            <option value="Facebook Ad">Facebook Ad</option>
+            <option value="Instagram Ad">Instagram Ad</option>
+            <option value="Facebook Page">Facebook Page</option>
+            <option value="Friend / Family">Friend or Family Member</option>
+            <option value="Door-to-Door">Someone visited our door</option>
+            <option value="Drove by">Drove by the church</option>
+            <option value="Google Search">Google Search</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div class="opt-in-row">
+          <input type="checkbox" id="optin" checked />
+          <label class="opt-in-text" for="optin">
+            I agree to receive text messages and emails from Rome Baptist Temple with visit reminders and church updates. Reply STOP at any time to unsubscribe.
+          </label>
+        </div>
+
+        <button class="submit-btn" id="submit-btn" onclick="submitForm()">
+          ✝&nbsp; Save My Seat — I'll Be There!
+        </button>
+      </div>
+
+      <!-- CONFIRMATION -->
+      <div id="confirm-view">
+        <div class="confirm-icon">✅</div>
+        <div class="confirm-title">You're all set, <span id="confirm-name"></span>!</div>
+        <div class="confirm-sub">Pastor Chris will be in touch shortly. Here's what to expect before Sunday:</div>
+        <div class="seq-box">
+          <div class="seq-box-title">Your follow-up sequence</div>
+          <div class="seq-item"><div class="seq-dot" style="background:#1e7e4a;"></div><div><div class="seq-text">Welcome text from Pastor Chris</div><div class="seq-when">Within a few minutes</div></div></div>
+          <div class="seq-item"><div class="seq-dot" style="background:#1565c0;"></div><div><div class="seq-text">Email with service times, address & what to expect</div><div class="seq-when">Tomorrow</div></div></div>
+          <div class="seq-item"><div class="seq-dot" style="background:#b8860b;"></div><div><div class="seq-text">Personal reminder text from Pastor Chris</div><div class="seq-when">A few days before Sunday</div></div></div>
+          <div class="seq-item"><div class="seq-dot" style="background:#c0392b;"></div><div><div class="seq-text">Sunday morning reminder — we'll be watching for you!</div><div class="seq-when">Morning of your visit</div></div></div>
+        </div>
+        <div class="pastor-note">
+          Questions before Sunday? Text or call Pastor Chris directly:<br>
+          <strong>(970) 640-2497</strong>
+        </div>
+        <button class="btn-reset" onclick="resetForm()">Submit another response</button>
+      </div>
+
+      <!-- ERROR -->
+      <div id="error-view">
+        <div class="error-big-icon">⚠️</div>
+        <div class="confirm-title">Something went wrong</div>
+        <div class="confirm-sub" style="max-width:300px;">
+          No worries! Please call or text Pastor Chris directly and he'll get you all set up.<br><br>
+          <strong style="color:#1a2340;font-size:16px;">(970) 640-2497</strong><br><br>
+          Or try submitting again below.
+        </div>
+        <button class="btn-reset" onclick="showForm()">Try again</button>
+      </div>
+
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:16px;font-size:12px;color:#9ca3af;">
+    Rome Baptist Temple · 3003 New Calhoun Hwy NE, Rome, GA 30161 · rbtemple.com · (706) 232-8969
+  </div>
+</div>
+
+<script>
+  const WEBHOOK = 'https://script.google.com/macros/s/AKfycbz4dHy6Tgn35MDB9zoktSAZkNGpRzfsH5dTFGyO3hkktSJpJEeEiuCvgbeiqUnAbcRA/exec';
+  let selectedSunday = 'June 22';
+
+  function selectSunday(el, val) {
+    document.querySelectorAll('.sunday-opt').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedSunday = val;
+  }
+
+  function validate() {
+    let ok = true;
+    const show = (id, s) => document.getElementById(id).classList.toggle('show', s);
+    const mark = (id, e) => document.getElementById(id).classList.toggle('error', e);
+    const fname = document.getElementById('fname').value.trim();
+    const lname = document.getElementById('lname').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    if (!fname) { show('err-fname', true); mark('fname', true); ok = false; } else { show('err-fname', false); mark('fname', false); }
+    if (!lname) { show('err-lname', true); mark('lname', true); ok = false; } else { show('err-lname', false); mark('lname', false); }
+    if (!phone || phone.replace(/\D/g, '').length < 10) { show('err-phone', true); mark('phone', true); ok = false; } else { show('err-phone', false); mark('phone', false); }
+    if (!selectedSunday) { show('err-sunday', true); ok = false; } else { show('err-sunday', false); }
+    return ok;
+  }
+
+  async function submitForm() {
+    if (!validate()) return;
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.textContent = 'Saving your seat...';
+
+    const payload = {
+      firstName: document.getElementById('fname').value.trim(),
+      lastName:  document.getElementById('lname').value.trim(),
+      phone:     document.getElementById('phone').value.trim(),
+      email:     document.getElementById('email').value.trim(),
+      sunday:    selectedSunday,
+      source:    document.getElementById('source').value,
+      optIn:     document.getElementById('optin').checked,
+    };
+
+    try {
+      await fetch(WEBHOOK, { method: 'POST', body: JSON.stringify(payload) });
+      document.getElementById('confirm-name').textContent = payload.firstName;
+      document.getElementById('form-view').classList.remove('active');
+      document.getElementById('confirm-view').classList.add('active');
+    } catch (err) {
+      document.getElementById('form-view').classList.remove('active');
+      document.getElementById('error-view').classList.add('active');
+    }
+  }
+
+  function showForm() {
+    ['form-view','confirm-view','error-view'].forEach(id => document.getElementById(id).classList.remove('active'));
+    document.getElementById('form-view').classList.add('active');
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = false;
+    btn.textContent = '✝  Save My Seat — I\'ll Be There!';
+  }
+
+  function resetForm() {
+    document.getElementById('fname').value = '';
+    document.getElementById('lname').value = '';
+    document.getElementById('phone').value = '';
+    document.getElementById('email').value = '';
+    document.getElementById('source').value = '';
+    document.getElementById('optin').checked = true;
+    selectedSunday = 'June 22';
+    document.querySelectorAll('.sunday-opt').forEach((o, i) => o.classList.toggle('selected', i === 3));
+    showForm();
+  }
+</script>
+
+</body>
+</html>
