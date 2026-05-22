@@ -421,11 +421,11 @@
         <div class="field-group">
           <label class="field-label">Which Sunday are you planning to visit? <span class="req">*</span></label>
           <div class="sunday-grid">
-            <div class="sunday-opt" onclick="selectSunday(this,'June 1')"><div class="sunday-date">June 1</div><div class="sunday-label">Sunday</div></div>
-            <div class="sunday-opt" onclick="selectSunday(this,'June 8')"><div class="sunday-date">June 8</div><div class="sunday-label">Sunday</div></div>
-            <div class="sunday-opt" onclick="selectSunday(this,'June 15')"><div class="sunday-date">June 15</div><div class="sunday-label">Sunday</div></div>
-            <div class="sunday-opt selected" onclick="selectSunday(this,'June 22')"><div class="sunday-date">June 22</div><div class="sunday-label">Sunday</div></div>
-            <div class="sunday-opt" onclick="selectSunday(this,'June 29')"><div class="sunday-date">June 29</div><div class="sunday-label">Sunday</div></div>
+            <div class="sunday-opt" onclick="selectSunday(this,'May 31')"><div class="sunday-date">May 31</div><div class="sunday-label">Sunday</div></div>
+            <div class="sunday-opt" onclick="selectSunday(this,'June 7')"><div class="sunday-date">June 7</div><div class="sunday-label">Sunday</div></div>
+            <div class="sunday-opt" onclick="selectSunday(this,'June 14')"><div class="sunday-date">June 14</div><div class="sunday-label">Sunday</div></div>
+            <div class="sunday-opt selected" onclick="selectSunday(this,'June 21')"><div class="sunday-date">June 21</div><div class="sunday-label">Sunday</div></div>
+            <div class="sunday-opt" onclick="selectSunday(this,'June 28')"><div class="sunday-date">June 28</div><div class="sunday-label">Sunday</div></div>
             <div class="sunday-opt" onclick="selectSunday(this,'Aug 9 — Homecoming')"><div class="sunday-date">Aug 9</div><div class="sunday-label">Homecoming!</div></div>
           </div>
           <div class="error-msg" id="err-sunday">Please select a Sunday.</div>
@@ -499,7 +499,7 @@
 
 <script>
   const WEBHOOK = 'https://script.google.com/macros/s/AKfycbz4dHy6Tgn35MDB9zoktSAZkNGpRzfsH5dTFGyO3hkktSJpJEeEiuCvgbeiqUnAbcRA/exec';
-  let selectedSunday = 'June 22';
+  let selectedSunday = 'June 21';
 
   function selectSunday(el, val) {
     document.querySelectorAll('.sunday-opt').forEach(o => o.classList.remove('selected'));
@@ -563,7 +563,7 @@
     document.getElementById('email').value = '';
     document.getElementById('source').value = '';
     document.getElementById('optin').checked = true;
-    selectedSunday = 'June 22';
+    selectedSunday = 'June 21';
     document.querySelectorAll('.sunday-opt').forEach((o, i) => o.classList.toggle('selected', i === 3));
     showForm();
   }
