@@ -314,6 +314,33 @@
 <footer>
   Rome Baptist Temple · 2403 Shorter Ave, Rome, GA 30165 · rbtemple.com
 </footer>
+<script>
+  document.querySelector('form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var btn = document.querySelector('.submit-btn');
+    btn.textContent = 'Submitting...';
+    btn.disabled = true;
 
-</body>
-</html>
+    var data = {
+      firstName: document.getElementById('firstName') ? document.getElementById('firstName').value : '',
+      lastName: document.getElementById('lastName') ? document.getElementById('lastName').value : '',
+      phone: document.getElementById('phone') ? document.getElementById('phone').value : '',
+      email: document.getElementById('email') ? document.getElementById('email').value : '',
+      address: document.getElementById('address') ? document.getElementById('address').value : '',
+      heardAbout: document.getElementById('heardAbout') ? document.getElementById('heardAbout').value : ''
+    };
+
+    fetch('https://script.google.com/macros/s/AKfycbzYpljqkzaxOzqgH8iS8ojLOMrglpIHsAqL3Sf1okkp_bqgYszIO00j8cyQ_Xmcil66/exec', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    })
+    .then(function() {
+      document.querySelector('.container').innerHTML = '<div style="text-align:center;padding:60px 20px;"><h2 style="color:#1a2744;">Thank You!</h2><p style="margin-top:16px;">We look forward to seeing you at Rome Baptist Temple.</p></div>';
+    })
+    .catch(function() {
+      btn.textContent = 'Submit My Visit Plan →';
+      btn.disabled = false;
+      alert('Something went wrong. Please try again.');
+    });
+  });
+</script>
